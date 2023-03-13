@@ -30,11 +30,6 @@ const router = createRouter({
           component: () =>import('@/views/admin/books.vue')
         },
         {
-          path: '/user',
-          name: 'user',
-          component: () =>import('@/views/admin/user.vue')
-        },
-        {
           path: '/insert',
           name: 'insert',
           component: () =>import('@/views/admin/form_add.vue')

@@ -13,7 +13,8 @@ export default {
         gambar: ''
       },
       buku:'',
-      modalDetail: false
+      modalDetail: false,
+      searchParam: ''
     }
   },
   components:{
@@ -21,13 +22,23 @@ export default {
   },
   methods:{
     getBuku(){
-      axios.get('books')
-      .then(ress=>{
-        this.buku=ress.data
-      })
-      .catch(error=>{
-        console.log(error)
-      })
+      if (this.searchParam == '') {
+        axios.get('books')
+          .then(ress=>{
+            this.buku=ress.data
+          })
+        .catch(error=>{
+            console.log(error)
+          })
+      } else {
+        axios.get(`booksSearch/${this.searchParam}`)
+          .then(ress=>{
+            this.buku=ress.data
+        })
+          .catch(error=>{
+            console.log(error)
+          })
+      }
     },
     async getBukuById(id){
       const ress = await axios.get(`books/${id}`)
@@ -50,6 +61,9 @@ export default {
   },
   created(){
     this.getBuku()
+  },
+  mounted(){
+    this.getBuku()
   }
   
 }
@@ -58,6 +72,13 @@ export default {
 <template>
 <navbar/>
 <div class="p-10 ">
+  <div class="flex justify-center mb-10"> 
+    <input type="text" placeholder="search" class=" border border-gray-400 py-2 px-5 w-[40rem] focus:outline" @input="getBuku()" v-model="searchParam">
+  </div> 
+  <div class=" flex flex-1 justify-center items-center" v-if="buku == ''">
+    <p>Data Not Found</p>
+
+  </div>
   <div class="grid grid-cols-3 gap-10" >
     <div class="  border p-5 mx-5 hover:bg-gray-100" v-for="data in buku" :key="data.id" @click=" getBukuById(data.id), modalDetail = true">
       <img :src="data.gambar" class=" " alt="">
